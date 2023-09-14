@@ -1,207 +1,111 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'listviewbuilder.dart';
+import 'addview.dart';
 
-void main() {
-  runApp(const MyApp());
+
+//UI = f(State)
+class MyState extends ChangeNotifier {
+ 
+  String filter = 'All';
+  
+  List<TodoItem> todolist = [
+    TodoItem('att göra 1', false),
+    TodoItem('att göra 2', false),
+    TodoItem('att göra 3', false),
+    TodoItem('att göra 4', true),
+    TodoItem('att göra 5', true),
+
+  ];
+  List<TodoItem> get filteredTodos {
+    switch (filter) {
+      case 'Done':
+        return todolist.where((todolist) => todolist.isDone).toList();
+      case 'Not Done':
+        return todolist.where((todolist) => !todolist.isDone).toList();
+      default:
+        return todolist;
+    }
+  }
+  
+void addToList(TodoItem todoitem) {
+    todolist.add(todoitem);
+    notifyListeners();
+  }
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+class TodoItem {
+  String item;
+  bool isDone;
 
-  // This widget is the root of your application.
+  TodoItem(this.item, this.isDone);
+}
+
+void main() {
+  MyState state = MyState();
+
+  runApp(
+    ChangeNotifierProvider(
+      create: (context) => state,
+      child: TodoApp(),
+    ),
+  );
+}
+
+class TodoApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        useMaterial3: true,
-      ),
-      home: const MyHomePage(),
-    );
+        theme: ThemeData(
+          colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+          useMaterial3: true,
+        ),
+        home: MyHome());
   }
 }
 
-class Todo {
-  final String item;
-  final String desc;
-
-  Todo(this.item, this.desc);
+class MyHome extends StatefulWidget {
+  @override  
+  State<MyHome> createState() => _MyHomeState();
 }
-
-class MyHomePage extends StatelessWidget {
-  const MyHomePage({super.key});
-
+class _MyHomeState extends State<MyHome> {
   @override
   Widget build(BuildContext context) {
-    List<Todo> todolist = [
-      Todo('Handla', 'Morötter, mjölk och paprika'),
-      Todo('Handla2', 'Morötter, mjölk och paprika'),
-      Todo('Handla3', 'Morötter, mjölk och paprika'),
-      Todo('Handla4', 'Morötter, mjölk och paprika'),
-      Todo('Handla5', 'Morötter, mjölk och paprika'),
-      Todo('Handla6', 'Morötter, mjölk och paprika'),
-      Todo('Handla7', 'Morötter, mjölk och paprika'),
-      Todo('Handla8', 'Morötter, mjölk och paprika'),
-      Todo('Handla9', 'Morötter, mjölk och paprika'),
-      Todo('Handla10', 'Morötter, mjölk och paprika'),
-      Todo('Handla11', 'Morötter, mjölk och paprika'),
-      Todo('Handla12', 'Morötter, mjölk och paprika'),
-      Todo('Handla', 'Morötter, mjölk och paprika'),
-      Todo('Handla', 'Morötter, mjölk och paprika'),
-    ];
-
+  
     return Scaffold(
       appBar: AppBar(
         title: const Text('To-Do'),
-        actions: <Widget>[
-          PopupMenuButton<String>(
-            onSelected: (String value) {},
-            itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
-              const PopupMenuItem<String>(
-                value: 'done',
-                child: Text('Done'),
-              ),
-              const PopupMenuItem<String>(
-                value: 'notDone',
-                child: Text('Not Done'),
-              ),
-              const PopupMenuItem<String>(
-                value: 'all',
-                child: Text('All'),
-              ),
-            ],
+        actions: [
+          DropdownButton<String>(
+            value: context.read<MyState>().filter,
+            onChanged: (newValue) {
+              setState(() {
+                context.read<MyState>().filter = newValue!;
+              });
+            },
+            items: ['All', 'Done', 'Not Done'].map((filter) {
+              return DropdownMenuItem<String>(
+                value: (filter),
+                child: Text(filter),
+              );
+            }).toList()
           ),
         ],
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
       ),
-      bottomNavigationBar: FloatingActionButton(
-          onPressed: () {
-            Navigator.push(
-                context, MaterialPageRoute(builder: (context) => AddView()));
-          },
-          child: const Icon(Icons.add, color: Colors.black87,size: 38, ),
-          backgroundColor: Theme.of(context).colorScheme.inversePrimary),
-      body: Center(
-        child: Column(
-          children: <Widget>[
-            Expanded(
-                child: ListView.builder(
-              itemBuilder: (context, index) {
-                return TodoList(todolist[index]);
-              },
-              itemCount: todolist.length,
-            )),
-          ],
-        ),
+      body: const ListViewBuilder(),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => AddView()),
+          );
+          ;
+        },
+        child: const Icon(Icons.add),
       ),
-    );
-    // This trailing comma makes auto-formatting nicer for build method
-  }
-}
-
-class TodoList extends StatelessWidget {
-  final Todo todo;
-  const TodoList(this.todo, {super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () {
-        Navigator.push(
-            context, MaterialPageRoute(builder: (context) => OtherView(todo)));
-      },
-      child: Container(
-        decoration: const BoxDecoration(
-          border: Border(
-            bottom: BorderSide(
-              color: Colors.grey, // Border color
-              width: 0.5, // Border width
-            ),
-          ),
-        ),
-        padding: const EdgeInsets.all(10.0), // Padding inside the container
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Padding(
-              padding: EdgeInsets.only(right: 10, top: 2),
-              child: Icon(Icons.check_box_outline_blank),
-            ),
-            Expanded(
-              child: Text(todo.item,
-                  style: const TextStyle(
-                    fontSize: 20,
-                  )),
-            ),
-            const Padding(
-              padding: EdgeInsets.only(right: 8.0),
-              child: Icon(Icons.delete),
-            ),
-          ],
-        ),
-      ),
+      
     );
   }
 }
 
-class OtherView extends StatelessWidget {
-  final Todo todo;
-  const OtherView(this.todo, {super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-          backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-          title: Text(todo.item)),
-      body: Column(
-        children: [
-          Text(todo.desc),
-        ],
-      ),
-    );
-  }
-}
-
-class AddView extends StatelessWidget {
-  const AddView({super.key});
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Add to list:'),
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-      ),
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.end,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Container(
-              decoration: const BoxDecoration(
-                shape: BoxShape.rectangle,
-              ),
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Container(
-                  margin: const EdgeInsets.all(12),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(32),
-                  ),
-                  child: TextField(
-                    decoration: InputDecoration(
-                      filled: true,
-                      fillColor: Theme.of(context).colorScheme.inversePrimary,
-                      hintStyle: const TextStyle(fontSize: 17),
-                      hintText: 'Add:',
-                      suffixIcon: const Icon(Icons.add),
-                      contentPadding: const EdgeInsets.all(20),
-                    ),
-                  ),
-                ),
-              )),
-        ],
-      ),
-    );
-  }
-}
