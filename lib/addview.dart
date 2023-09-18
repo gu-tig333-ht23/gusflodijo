@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'main.dart';
+import 'MyState.dart';
+import 'TodoItem.dart';
 
-class AddView extends StatefulWidget {
-  @override
-  State<AddView> createState() => _AddViewState();
-}
-class _AddViewState extends State<AddView> {
+
+class AddView extends StatelessWidget {
   String task = '';
+
   TextEditingController textEditingController = TextEditingController(text: '');
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -34,13 +34,12 @@ class _AddViewState extends State<AddView> {
                 child: TextField(
                   controller: textEditingController,
                   onSubmitted: (value) {
-                    setState(() {
-                      task = textEditingController.text;
-                      context
+                    task = textEditingController.text;
+                    context
                           .read<MyState>()
                           .addToList((TodoItem(task, false)));
-                      Navigator.pop(context);
-                    });
+                     context.read<MyState>().notifyListeners();
+                     Navigator.pop(context);
                   },
                   decoration: InputDecoration(
                     border: OutlineInputBorder(),

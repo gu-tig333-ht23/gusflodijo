@@ -1,18 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'main.dart';
+import 'MyState.dart';
+import 'myHome.dart';
 
 
-class ListViewBuilder extends StatefulWidget {
+
+
+
+class ListViewBuilder extends StatelessWidget {
   const ListViewBuilder({key, value}) : super(key: key);
-  @override
-  State<ListViewBuilder> createState() => _ListViewBuilderState();
-}
 
-class _ListViewBuilderState extends State<ListViewBuilder> {
-  @override
+
   Widget build(BuildContext context) {
 
+    void removeTodoItem(int index) {
+    context.read<MyState>().todolist.removeAt(index);
+}
     return Consumer<MyState>(builder: (context, state, _) => Center(      
         child: Column(
           children: <Widget>[
@@ -33,17 +37,15 @@ class _ListViewBuilderState extends State<ListViewBuilder> {
                   leading: Checkbox(
                     value: filteredlist.isDone,
                     onChanged: (newValue) {
-                      setState(() {
-                        filteredlist.isDone = newValue!;
-                      });
+                    filteredlist.isDone = newValue!;
+                    context.read<MyState>().notifyListeners();  
                     },
                   ),
                   trailing: IconButton(
                     icon: Icon(Icons.delete),
                     onPressed: () {
-                      setState(() {
-                        context.read<MyState>().todolist.removeAt(index);
-                      });
+                      removeTodoItem(index);
+                      context.read<MyState>().notifyListeners();
                     },
                   ),
                 );
