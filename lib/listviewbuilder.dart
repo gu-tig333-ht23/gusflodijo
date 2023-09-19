@@ -1,19 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'main.dart';
 import 'MyState.dart';
-import 'myHome.dart';
-
-
-
-
 
 class ListViewBuilder extends StatelessWidget {
   const ListViewBuilder({key, value}) : super(key: key);
 
 
   Widget build(BuildContext context) {
-
+    //Denna funktionen behöver nog flyttas till MyState och kopplas på apin likt add och fetch
     void removeTodoItem(int index) {
     context.read<MyState>().todolist.removeAt(index);
 }
