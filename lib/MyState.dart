@@ -1,30 +1,57 @@
 import 'package:flutter/material.dart';
-
+import './api.dart' as api;
 import 'TodoItem.dart';
 
 class MyState extends ChangeNotifier {
  
   String filter = 'All';
   
-  List<TodoItem> todolist = [
-    TodoItem('att göra 1', false),
-    TodoItem('att göra 2', false),
-    TodoItem('att göra 3', false),
-    TodoItem('att göra 4', true),
-    TodoItem('att göra 5', true),
-
+  List<TodoItem> _todolist= [
+    
   ];
+List<TodoItem> get todolist => _todolist;
+
+
+
+//har hämtat todolist som MAP
+void fetchTodos() async {
+  var todolist = await api.getTodos();
+  _todolist = todolist;
+  notifyListeners();
+}
+
+
+void addTodos(TodoItem todoitem) async {
+  print('i addtodos i mystate');
+  await api.addTodos(todoitem);
+  fetchTodos();
+}
+
+void deleteTodoItem(id) async{
+  await api.deleteTodoItem(id);
+  fetchTodos();
+}
+
+/*
   List<TodoItem> get filteredTodos {
     switch (filter) {
       case 'Done':
-        return todolist.where((todolist) => todolist.isDone).toList();
+        return todolist.where((todolist) => todolist.done).toList();
       case 'Not Done':
-        return todolist.where((todolist) => !todolist.isDone).toList();
+        return todolist.where((todolist) => !todolist.done).toList();
       default:
         return todolist;
      
     }
   }
+  */
+  @override
+  void notifyListeners() {
+    super.notifyListeners();
+
+  
+  }
+}
 
 /* 
 1.Gör en ny lista som använder apit, ser ut såhär i exemplet
@@ -51,6 +78,7 @@ void addTodoItem(TodoItem todoitem) async {
   fetchTodos(); <------ göt så listan uppdateras direkt när något läggs till.
 }
 */
+/*
 void addToList(TodoItem todoitem) {
     todolist.add(todoitem);
     notifyListeners();
@@ -63,3 +91,4 @@ void addToList(TodoItem todoitem) {
   
   }
 }
+*/

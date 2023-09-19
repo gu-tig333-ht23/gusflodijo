@@ -6,6 +6,7 @@ import 'TodoItem.dart';
 
 class AddView extends StatelessWidget {
   String task = '';
+  bool done = false;
 
   TextEditingController textEditingController = TextEditingController(text: '');
 
@@ -33,12 +34,11 @@ class AddView extends StatelessWidget {
                 ),
                 child: TextField(
                   controller: textEditingController,
-                  onSubmitted: (value) {
+                  onSubmitted: (value) async {
                     task = textEditingController.text;
                     context
                           .read<MyState>()
-                          .addToList((TodoItem(task, false)));
-                     context.read<MyState>().notifyListeners();
+                          .addTodos((TodoItem(task, false)));
                      Navigator.pop(context);
                   },
                   decoration: InputDecoration(

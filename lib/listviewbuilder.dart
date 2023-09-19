@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'MyState.dart';
+import 'TodoItem.dart';
 
 class ListViewBuilder extends StatelessWidget {
   const ListViewBuilder({key, value}) : super(key: key);
@@ -11,34 +12,39 @@ class ListViewBuilder extends StatelessWidget {
     void removeTodoItem(int index) {
     context.read<MyState>().todolist.removeAt(index);
 }
+
+    
     return Consumer<MyState>(builder: (context, state, _) => Center(      
+      
         child: Column(
           children: <Widget>[
             Expanded(
               child: ListView.builder(
-                itemCount: state.filteredTodos.length,
+                itemCount: state.todolist.length,
                 itemBuilder: (context, index) {
-                  final filteredlist = state.filteredTodos[index];
+                  final filteredlist = state.todolist[index];                             
                 return ListTile(
-                  title: Text(
-                    filteredlist.item,
+                  title: Text(                   
+                    filteredlist.title,                                  
                     style: TextStyle(
-                      decoration: filteredlist.isDone
+                      decoration: filteredlist.done
                           ? TextDecoration.lineThrough
                           : TextDecoration.none,
                     ),
                   ),
                   leading: Checkbox(
-                    value: filteredlist.isDone,
+                    value: filteredlist.done,
                     onChanged: (newValue) {
-                    filteredlist.isDone = newValue!;
+                    filteredlist.done = newValue!;
                     context.read<MyState>().notifyListeners();  
                     },
                   ),
                   trailing: IconButton(
                     icon: Icon(Icons.delete),
                     onPressed: () {
-                      removeTodoItem(index);
+                      context
+                          .read<MyState>()
+                          .deleteTodoItem(filteredlist.id);
                       context.read<MyState>().notifyListeners();
                     },
                   ),
@@ -53,5 +59,46 @@ class ListViewBuilder extends StatelessWidget {
   }
 }
 
-                
+
+/*                
               
+class ItemWIdget extends StatelessWidget {
+  final TodoItem todoitem;
+  @override
+  
+  ItemWIdget(this.todoitem);
+
+  Widget build(BuildContext context) {
+
+    return ListTile(
+                  title: Text(
+                    
+                    filteredlist.title,
+                    
+                    style: TextStyle(
+                      decoration: filteredlist.done
+                          ? TextDecoration.lineThrough
+                          : TextDecoration.none,
+                    ),
+                  ),
+                  leading: Checkbox(
+                    value: filteredlist.done,
+                    onChanged: (newValue) {
+                    filteredlist.done = newValue!;
+                    context.read<MyState>().notifyListeners();  
+                    },
+                  ),
+                  trailing: IconButton(
+                    icon: Icon(Icons.delete),
+                    onPressed: () {
+                      removeTodoItem(index);
+                      context.read<MyState>().notifyListeners();
+                    },
+                  ),
+                );
+    );
+
+  }
+}
+
+*/
