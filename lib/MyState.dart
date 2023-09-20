@@ -7,31 +7,31 @@ class MyState extends ChangeNotifier {
   List<TodoItem> _todolist = [];
   List<TodoItem> get todolist => _todolist;
 
-//Hämtar todos från API
+// Fetch todo
   void fetchTodos() async {
     var todolist = await api.getTodos();
     _todolist = todolist;
     notifyListeners();
   }
 
-//Lägga till Todo-funktion till API
+// Add todo
   void addTodos(TodoItem todoitem) async {
     await api.addTodos(todoitem);
     fetchTodos();
   }
 
-//Deletefunktion som deletar via API
+// Delete Todo
   void deleteTodoItem(id) async {
     await api.deleteTodoItem(id);
     fetchTodos();
   }
-
+// Update Todo
   void updateTodoItem(TodoItem todoitem) async {
     await api.updateTodoItem(todoitem);
     fetchTodos();
   }
 
-  //Filter för ListviewBuilder
+  //Filter for ListviewBuilder
   List<TodoItem> get filteredTodos {
     switch (filter) {
       case 'Done':
