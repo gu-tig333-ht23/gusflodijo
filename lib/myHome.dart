@@ -40,7 +40,6 @@ class _MyHomeState extends State<MyHome> {
             context,
             MaterialPageRoute(builder: (context) => AddView()),
           );
-          ;
         },
         child: const Icon(Icons.add),
       ),

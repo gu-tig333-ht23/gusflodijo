@@ -16,7 +16,6 @@ class MyState extends ChangeNotifier {
 
 //Lägga till Todo-funktion till API
   void addTodos(TodoItem todoitem) async {
-    print('i addtodos i mystate');
     await api.addTodos(todoitem);
     fetchTodos();
   }
@@ -24,6 +23,11 @@ class MyState extends ChangeNotifier {
 //Deletefunktion som deletar via API
   void deleteTodoItem(id) async {
     await api.deleteTodoItem(id);
+    fetchTodos();
+  }
+
+  void updateTodoItem(TodoItem todoitem) async {
+    await api.updateTodoItem(todoitem);
     fetchTodos();
   }
 

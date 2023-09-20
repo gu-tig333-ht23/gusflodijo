@@ -14,7 +14,6 @@ void main() {
       create: (context) => state,
       child: TodoApp(),
     ),
-    
   );
 }
 
@@ -29,5 +28,3 @@ class TodoApp extends StatelessWidget {
         home: MyHome());
   }
 }
-
-

@@ -4,8 +4,6 @@ import '/TodoItem.dart';
 
 const String ENDPOINT = 'https://todoapp-api.apps.k8s.gu.se';
 
-//NY GET todofunktion
-
 Future<List<TodoItem>> getTodos() async {
   try {
     http.Response response = await http.get(
@@ -28,20 +26,18 @@ Future<void> addTodos(TodoItem todoitem) async {
   );
 }
 
-
 //Funktionen funkar men if satsen i try och catch är kass..
 Future<void> deleteTodoItem(id) async {
-  print(id);
-  try {
-    final response = await http.delete(Uri.parse(
-        '$ENDPOINT/todos/$id?key=77144a7b-183f-4747-948c-e6b5c9755ffc'));
-    if (response.statusCode == 204) {
-      print('Item with ID $id has been deleted.');
-    } else {
-      print(
-          'Failed to delete item with ID $id. Status code: ${response.statusCode}');
-    }
-  } catch (e) {
-    print('An error occurred: $e');
-  }
+  await http.delete(Uri.parse(
+      '$ENDPOINT/todos/$id?key=77144a7b-183f-4747-948c-e6b5c9755ffc'));
+}
+
+Future<void> updateTodoItem(TodoItem todoitem) async {
+  final id = todoitem.id; // Assuming TodoItem has an 'id' property.
+  await http.put(
+    Uri.parse('$ENDPOINT/todos/$id?key=77144a7b-183f-4747-948c-e6b5c9755ffc'),
+    headers: {'Content-Type': 'application/json'},
+    body: jsonEncode(todoitem
+        .toJson()), // Assuming toJson() method converts TodoItem to JSON.
+  );
 }
