@@ -3,9 +3,9 @@ import 'package:provider/provider.dart';
 import 'MyState.dart';
 import 'TodoItem.dart';
 
-
 class AddView extends StatelessWidget {
   String task = '';
+  bool done = false;
 
   TextEditingController textEditingController = TextEditingController(text: '');
 
@@ -33,13 +33,10 @@ class AddView extends StatelessWidget {
                 ),
                 child: TextField(
                   controller: textEditingController,
-                  onSubmitted: (value) {
+                  onSubmitted: (value) async {
                     task = textEditingController.text;
-                    context
-                          .read<MyState>()
-                          .addToList((TodoItem(task, false)));
-                     context.read<MyState>().notifyListeners();
-                     Navigator.pop(context);
+                    context.read<MyState>().addTodos((TodoItem(task, false)));
+                    Navigator.pop(context);
                   },
                   decoration: InputDecoration(
                     border: OutlineInputBorder(),
@@ -58,4 +55,3 @@ class AddView extends StatelessWidget {
     );
   }
 }
-

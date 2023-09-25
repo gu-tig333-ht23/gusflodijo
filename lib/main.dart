@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'myHome.dart';
+import 'myhome.dart';
 import 'MyState.dart';
 
 //UI = f(State)
 
 void main() {
   MyState state = MyState();
+  state.fetchTodos();
 
   runApp(
     ChangeNotifierProvider(
@@ -27,4 +28,3 @@ class TodoApp extends StatelessWidget {
         home: MyHome());
   }
 }
-
