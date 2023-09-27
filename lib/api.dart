@@ -15,31 +15,43 @@ Future<List<TodoItem>> getTodos() async {
     List notesJson = jsonResponse;
     return notesJson.map((json) => TodoItem.fromJson(json)).toList();
   } catch (e) {
-    print(e);
+    print('An error occured: $e');
   }
   return [];
 }
 
 // Add item
 Future<void> addTodos(TodoItem todoitem) async {
-  await http.post(
-    Uri.parse('$ENDPOINT/todos?key=$KEY'),
-    headers: {"Content-Type": "application/json"},
-    body: jsonEncode(todoitem.toJson()),
-  );
+  try {
+    await http.post(
+      Uri.parse('$ENDPOINT/todos?key=$KEY'),
+      headers: {"Content-Type": "application/json"},
+      body: jsonEncode(todoitem.toJson()),
+    );
+  } catch (e) {
+    print('An error occured: $e');
+  }
 }
 
 // Delete item
 Future<void> deleteTodoItem(id) async {
-  await http.delete(Uri.parse('$ENDPOINT/todos/$id?key=$KEY'));
+  try {
+    await http.delete(Uri.parse('$ENDPOINT/todos/$id?key=$KEY'));
+  } catch (e) {
+    print('An error occured: $e');
+  }
 }
 
 // Update item
 Future<void> updateTodoItem(TodoItem todoitem) async {
-  final id = todoitem.id;
-  await http.put(
-    Uri.parse('$ENDPOINT/todos/$id?key=$KEY'),
-    headers: {'Content-Type': 'application/json'},
-    body: jsonEncode(todoitem.toJson()),
-  );
+  try {
+    final id = todoitem.id;
+    await http.put(
+      Uri.parse('$ENDPOINT/todos/$id?key=$KEY'),
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode(todoitem.toJson()),
+    );
+  } catch (e) {
+    print('An error occured: $e');
+  }
 }
