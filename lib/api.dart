@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import '/TodoItem.dart';
+import '/todoitem.dart';
 
 const String ENDPOINT = 'https://todoapp-api.apps.k8s.gu.se';
 const String KEY = '77144a7b-183f-4747-948c-e6b5c9755ffc';

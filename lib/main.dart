@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'myhome.dart';
-import 'MyState.dart';
+import 'mystate.dart';
 
 //UI = f(State)
 

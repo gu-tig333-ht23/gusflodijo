@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import './api.dart' as api;
-import 'TodoItem.dart';
+import 'todoitem.dart';
 
 class MyState extends ChangeNotifier {
   String filter = 'All';

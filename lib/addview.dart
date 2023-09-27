@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'MyState.dart';
-import 'TodoItem.dart';
+import 'mystate.dart';
+import 'todoitem.dart';
 
 class AddView extends StatelessWidget {
   String task = '';
